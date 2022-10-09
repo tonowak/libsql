@@ -1,8 +1,3 @@
-# Sposób kompilacji:
+# Odpalenie:
 
-```
-cargo build
-cd src/
-cargo build
-cargo test
-```
+`./configure && make && make rusttest` w głównym folderze projektu
