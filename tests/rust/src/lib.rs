@@ -22,18 +22,17 @@ mod tests {
     }
 
     extern "C" fn callback(
-      _data: *mut ::std::os::raw::c_void,
-      argc: ::std::os::raw::c_int,
-      argv: *mut *mut ::std::os::raw::c_char,
-      _azColName: *mut *mut ::std::os::raw::c_char
+        _data: *mut ::std::os::raw::c_void,
+        argc: ::std::os::raw::c_int,
+        argv: *mut *mut ::std::os::raw::c_char,
+        _azColName: *mut *mut ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int {
-      unsafe {
-        assert_eq!(argc, 1);
-        assert_eq!(from_cstr(*argv), "SQL fuzz");
-        0
-      }
+        unsafe {
+            assert_eq!(argc, 1);
+            assert_eq!(from_cstr(*argv), "SQL fuzz");
+            0
+        }
     }
-
 
     #[test]
     fn basicTest() {
@@ -43,7 +42,15 @@ mod tests {
             assert_eq!(sqlite3_open(path.as_ptr(), &mut db), 0);
 
             let sql = CString::new("SELECT msg FROM readme").unwrap();
-            let rc: u32 = sqlite3_exec(db, sql.as_ptr(), Some(callback), std::ptr::null_mut(), std::ptr::null_mut()).try_into().unwrap();
+            let rc: u32 = sqlite3_exec(
+                db,
+                sql.as_ptr(),
+                Some(callback),
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+            )
+            .try_into()
+            .unwrap();
 
             if rc != SQLITE_OK {
                 panic!("Error while executing SQL query.");
